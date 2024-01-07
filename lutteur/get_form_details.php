@@ -18,7 +18,8 @@ try {
     }
 
     $reponse["data"]["les_admins"] = $taf_config->get_db()->query("select * from admin")->fetchAll(PDO::FETCH_ASSOC);
-$reponse["data"]["les_ecuries"] = $taf_config->get_db()->query("select * from ecurie")->fetchAll(PDO::FETCH_ASSOC);
+    $reponse["data"]["les_ecuries"] = $taf_config->get_db()->query("select * from ecurie")->fetchAll(PDO::FETCH_ASSOC);
+    $reponse["data"]["les_ecuries_lutteurs"] = $taf_config->get_db()->query("select * from ecurie CROSS JOIN lutteur where lutteur.id_ecurie=ecurie.id")->fetchAll(PDO::FETCH_ASSOC);
 
 
     $reponse["status"] = true;
