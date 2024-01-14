@@ -46,7 +46,7 @@ try {
     $deplacer_image=move_uploaded_file($tmp_nom,"upload/".$nouveau_nom_img);
     // preparation de la reqête
     extract($_POST);
-    $query="INSERT INTO `actualite`( `nom`, `photo`, `description`,`taille`, `poids`,`age`, `id_admin`,`id_ecurie`) VALUES ('".$nom."','".$nouveau_nom_img."','".$description."','".$taille."','".$poids."','".$age."','".$id_admin."','".$id_ecurie."')";
+    $query="INSERT INTO `lutteur`( `nom`, `photo`, `description`,`taille`, `poids`,`age`, `id_admin`,`id_ecurie`) VALUES ('".$nom."','".$nouveau_nom_img."','".$description."','".$taille."','".$poids."','".$age."','".$id_admin."','".$id_ecurie."')";
     // fin retouche 
 
     // $reponse["query"]=$query;
