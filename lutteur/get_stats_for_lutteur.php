@@ -24,22 +24,25 @@ try {
     SELECT lutteur.id, lutteur.nom,lutteur.photo, COUNT(*) AS nombre_combats
     FROM lutteur
     JOIN combat ON lutteur.id = combat.id_lutteur1 OR lutteur.id = combat.id_lutteur2
-    GROUP BY lutteur.id, lutteur.nom,lutteur.photo;
-")->fetchAll(PDO::FETCH_ASSOC);
+    GROUP BY lutteur.id, lutteur.nom,lutteur.photo 
+    ORDER by nombre_combats DESC;
+    ")->fetchAll(PDO::FETCH_ASSOC);
+
     $reponse["data"]["nombreVictoireLutteur"] = $taf_config->get_db()->query("
     SELECT lutteur.id, lutteurs.nom, lutteur.photo,
     SUM(CASE WHEN combat.resultat = 1 THEN 1 ELSE 0 END) AS victoires
     FROM lutteur
     LEFT JOIN combat ON lutteur.id = combat.id_lutteur1 OR lutteur.id = combat.id_lutteur2
     GROUP BY lutteur.id, lutteur.nom,lutteur.photo;
-")->fetchAll(PDO::FETCH_ASSOC);
+    ")->fetchAll(PDO::FETCH_ASSOC);
+
     $reponse["data"]["nombreDefaiteLutteur"] = $taf_config->get_db()->query("
     SELECT lutteur.id, lutteurs.nom, lutteur.photo,
     SUM(CASE WHEN combat.resultat = 0 THEN 1 ELSE 0 END) AS victoires
     FROM lutteur
     LEFT JOIN combat ON lutteur.id = combat.id_lutteur1 OR lutteur.id = combat.id_lutteur2
     GROUP BY lutteur.id, lutteur.nom,lutteur.photo;
-")->fetchAll(PDO::FETCH_ASSOC);
+    ")->fetchAll(PDO::FETCH_ASSOC);
 
 
     $reponse["status"] = true;
