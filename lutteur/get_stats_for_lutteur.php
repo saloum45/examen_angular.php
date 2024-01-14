@@ -20,6 +20,8 @@ try {
     // $reponse["data"]["les_admins"] = $taf_config->get_db()->query("select * from admin")->fetchAll(PDO::FETCH_ASSOC);
     // $reponse["data"]["les_ecuries"] = $taf_config->get_db()->query("select * from ecurie")->fetchAll(PDO::FETCH_ASSOC);
     // $reponse["data"]["les_ecuries_lutteurs"] = $taf_config->get_db()->query("select * from ecurie CROSS JOIN lutteur where lutteur.id_ecurie=ecurie.id")->fetchAll(PDO::FETCH_ASSOC);
+
+    // requête pour obtenir le nombre de combat par lutteur
     $reponse["data"]["nombreCombatLutteur"] = $taf_config->get_db()->query("
     SELECT lutteur.id, lutteur.nom,lutteur.photo, COUNT(*) AS nombre_combats,ecurie.nom_ecurie
     FROM lutteur
@@ -29,6 +31,7 @@ try {
     ORDER by nombre_combats DESC;
     ")->fetchAll(PDO::FETCH_ASSOC);
 
+    // requête pour obtenir le nombre de victoire par lutteur
     $reponse["data"]["nombreVictoireLutteur"] = $taf_config->get_db()->query("
     SELECT lutteur.id, lutteur.nom,lutteur.photo, ecurie.nom_ecurie,
        COUNT(combat.id) AS nombre_victoires
@@ -40,6 +43,7 @@ try {
     ORDER BY nombre_victoires DESC;
     ")->fetchAll(PDO::FETCH_ASSOC);
 
+    // requête pour obtenir le nombre de defaites par lutteur
     $reponse["data"]["nombreDefaiteLutteur"] = $taf_config->get_db()->query("
     SELECT lutteur.id, lutteur.nom,ecurie.nom_ecurie,lutteur.photo,
        COUNT(DISTINCT combat.id) - COUNT(DISTINCT CASE WHEN combat.resultat = lutteur.id THEN combat.id END) AS nombre_defaites
