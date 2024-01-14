@@ -30,12 +30,13 @@ try {
     ")->fetchAll(PDO::FETCH_ASSOC);
 
     $reponse["data"]["nombreVictoireLutteur"] = $taf_config->get_db()->query("
-    SELECT lutteur.id, lutteur.nom, ecurie.nom_ecurie,
+    SELECT lutteur.id, lutteur.nom,lutteur.photo, ecurie.nom_ecurie,
        COUNT(combat.id) AS nombre_victoires
     FROM lutteur
     LEFT JOIN combat ON lutteur.id = combat.resultat
     JOIN ecurie ON lutteur.id_ecurie=ecurie.id
-    GROUP BY lutteur.id, lutteur.nom,ecurie.nom_ecurie
+    GROUP BY lutteur.id, lutteur.nom,lutteur.photo,ecurie.nom_ecurie
+    HAVING nombre_victoires>0
     ORDER BY nombre_victoires DESC;
     ")->fetchAll(PDO::FETCH_ASSOC);
 
