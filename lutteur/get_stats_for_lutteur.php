@@ -21,19 +21,22 @@ try {
     // $reponse["data"]["les_ecuries"] = $taf_config->get_db()->query("select * from ecurie")->fetchAll(PDO::FETCH_ASSOC);
     // $reponse["data"]["les_ecuries_lutteurs"] = $taf_config->get_db()->query("select * from ecurie CROSS JOIN lutteur where lutteur.id_ecurie=ecurie.id")->fetchAll(PDO::FETCH_ASSOC);
     $reponse["data"]["nombreCombatLutteur"] = $taf_config->get_db()->query("
-    SELECT lutteur.id, lutteur.nom,lutteur.photo, COUNT(*) AS nombre_combats
+    SELECT lutteur.id, lutteur.nom,lutteur.photo, COUNT(*) AS nombre_combats,ecurie.nom_ecurie
     FROM lutteur
     JOIN combat ON lutteur.id = combat.id_lutteur1 OR lutteur.id = combat.id_lutteur2
-    GROUP BY lutteur.id, lutteur.nom,lutteur.photo 
+	JOIN ecurie ON lutteur.id_ecurie=ecurie.id
+    GROUP BY lutteur.id, lutteur.nom,lutteur.photo,ecurie.nom_ecurie
     ORDER by nombre_combats DESC;
     ")->fetchAll(PDO::FETCH_ASSOC);
 
     $reponse["data"]["nombreVictoireLutteur"] = $taf_config->get_db()->query("
-    SELECT lutteur.id, lutteurs.nom, lutteur.photo,
-    SUM(CASE WHEN combat.resultat = 1 THEN 1 ELSE 0 END) AS victoires
+    SELECT lutteur.id, lutteur.nom, ecurie.nom_ecurie,
+       COUNT(combat.id) AS nombre_victoires
     FROM lutteur
-    LEFT JOIN combat ON lutteur.id = combat.id_lutteur1 OR lutteur.id = combat.id_lutteur2
-    GROUP BY lutteur.id, lutteur.nom,lutteur.photo;
+    LEFT JOIN combat ON lutteur.id = combat.resultat
+    JOIN ecurie ON lutteur.id_ecurie=ecurie.id
+    GROUP BY lutteur.id, lutteur.nom,ecurie.nom_ecurie
+    ORDER BY nombre_victoires DESC;
     ")->fetchAll(PDO::FETCH_ASSOC);
 
     $reponse["data"]["nombreDefaiteLutteur"] = $taf_config->get_db()->query("
