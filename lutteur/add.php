@@ -21,15 +21,34 @@ try {
         contient tous les parametres envoyés par la methode POST
      */
 
-    if (empty($params)) {
-        $reponse["status"] = false;
-        $reponse["erreur"] = "Parameters required";
-        echo json_encode($reponse);
-        exit;
-    }
-    // pour charger l'heure courante
-    // $params["date_enregistrement"]=date("Y-m-d H:i:s");
-    $query = $table_query->dynamicInsert($params);
+    // if (empty($params)) {
+    //     $reponse["status"] = false;
+    //     $reponse["erreur"] = "Parameters required";
+    //     echo json_encode($reponse);
+    //     exit;
+    // }
+    // // pour charger l'heure courante
+    // // $params["date_enregistrement"]=date("Y-m-d H:i:s");
+    // $query = $table_query->dynamicInsert($params);
+    // // $reponse["query"]=$query;
+    // if ($taf_config->get_db()->exec($query)) {
+    //     $reponse["status"] = true;
+    //     $params["id_$table_name"] = $taf_config->get_db()->lastInsertId();
+    //     $reponse["data"] = $params;
+    // } else {
+    //     $reponse["status"] = false;
+    //     $reponse["erreur"] = "Erreur d'insertion à la base de ";
+    // }
+    $img_nom=$_FILES['file']['name'];
+    $tmp_nom=$_FILES['file']['tmp_name'];
+    $time=time();
+    $nouveau_nom_img=$time.$img_nom;
+    $deplacer_image=move_uploaded_file($tmp_nom,"upload/".$nouveau_nom_img);
+    // preparation de la reqête
+    extract($_POST);
+    $query="INSERT INTO `actualite`( `nom`, `photo`, `description`,`taille`, `poids`,`age`, `id_admin`,`id_ecurie`) VALUES ('".$nom."','".$nouveau_nom_img."','".$description."','".$taille."','".$poids."','".$age."','".$id_admin."','".$id_ecurie."')";
+    // fin retouche 
+
     // $reponse["query"]=$query;
     if ($taf_config->get_db()->exec($query)) {
         $reponse["status"] = true;
