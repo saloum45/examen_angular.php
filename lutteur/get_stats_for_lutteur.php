@@ -41,11 +41,14 @@ try {
     ")->fetchAll(PDO::FETCH_ASSOC);
 
     $reponse["data"]["nombreDefaiteLutteur"] = $taf_config->get_db()->query("
-    SELECT lutteur.id, lutteurs.nom, lutteur.photo,
-    SUM(CASE WHEN combat.resultat = 0 THEN 1 ELSE 0 END) AS victoires
+    SELECT lutteur.id, lutteur.nom,ecurie.nom_ecurie,lutteur.photo,
+       COUNT(DISTINCT combat.id) - COUNT(DISTINCT CASE WHEN combat.resultat = lutteur.id THEN combat.id END) AS nombre_defaites
     FROM lutteur
     LEFT JOIN combat ON lutteur.id = combat.id_lutteur1 OR lutteur.id = combat.id_lutteur2
-    GROUP BY lutteur.id, lutteur.nom,lutteur.photo;
+    JOIN ecurie ON lutteur.id_ecurie=ecurie.id
+    GROUP BY lutteur.id, lutteur.nom,ecurie.nom_ecurie,lutteur.photo
+    HAVING nombre_defaites > 0
+    ORDER BY nombre_defaites DESC
     ")->fetchAll(PDO::FETCH_ASSOC);
 
 
