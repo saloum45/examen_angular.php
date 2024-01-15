@@ -43,7 +43,7 @@ try {
     ORDER BY nombre_victoires DESC;
     ")->fetchAll(PDO::FETCH_ASSOC);
 
-    // requête pour obtenir le nombre de defaites par lutteur
+    // requête pour obtenir le nombre de combat par lutteur
     $reponse["data"]["nombreDefaiteLutteur"] = $taf_config->get_db()->query("
     SELECT lutteur.id, lutteur.nom,ecurie.nom_ecurie,lutteur.photo,
        COUNT(DISTINCT combat.id) - COUNT(DISTINCT CASE WHEN combat.resultat = lutteur.id THEN combat.id END) AS nombre_defaites
