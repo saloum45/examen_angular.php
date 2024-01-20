@@ -26,7 +26,14 @@ try {
     // $query="select * from  $table_name ".$condition;
     $id=$params['id'];
     $query="select * from  $table_name where id='".$id."'";
+    // $query="select * from  ecurie where ecurie.id = ( select lutteur.id_ecurie from lutteur where lutteur.id ='".$id."')";
     $reponse["data"]["lutteur"] = $taf_config->get_db()->query($query)->fetchAll(PDO::FETCH_ASSOC);
+    $reponse["data"]["ecurie"] = $taf_config->get_db()->query("select * from  ecurie where ecurie.id = ( select lutteur.id_ecurie from lutteur where lutteur.id ='".$id."')")->fetchAll(PDO::FETCH_ASSOC);
+
+    // requete pour l'ecurie du lutteur portant l'id
+    // $reponse["data"]["lutteur"] = $taf_config->get_db()->query("
+    // SELECT nom_ecurie FROM ecurie JOIN lutteur on 
+    // ")->fetchAll(PDO::FETCH_ASSOC);
 
     // requete pour le nombre de defaites du lutteur portant l'id
     $reponse["data"]["nombre_defaites"] = $taf_config->get_db()->query("
