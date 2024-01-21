@@ -21,16 +21,19 @@ try {
         $reponse["data"]["combat"] = $taf_config->get_db()->query("SELECT 
         c.id AS id_combat,
         c.date_combat AS date_combat,
+        c.resultat AS vainqueur,
         c.description_combat AS description_combat,
         c.titre AS titre,
         l1.nom AS nom_lutteur1,
+        l1.id AS id_lutteur1,
         l1.photo AS photo_lutteur1,
         l2.nom AS nom_lutteur2,
+        l2.id AS id_lutteur2,
         l2.photo AS photo_lutteur2
         FROM combat c
         JOIN lutteur l1 ON c.id_lutteur1 = l1.id
         JOIN lutteur l2 ON c.id_lutteur2 = l2.id
-        WHERE c.id='".$params['id']."'
+        WHERE c.id='".$params['id']."' 
     ;")->fetchAll(PDO::FETCH_ASSOC);
     }else{
 
