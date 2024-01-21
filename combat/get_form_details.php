@@ -16,25 +16,40 @@ try {
         echo json_encode($auth_reponse);
         die;
     }
+    if (isset($params['id'])) {
+        # code...
+        $reponse["data"]["combat"] = $taf_config->get_db()->query("SELECT 
+        c.id AS id_combat,
+        c.date_combat AS date_combat,
+        c.description_combat AS description_combat,
+        c.titre AS titre,
+        l1.nom AS nom_lutteur1,
+        l1.photo AS photo_lutteur1,
+        l2.nom AS nom_lutteur2,
+        l2.photo AS photo_lutteur2
+        FROM combat c
+        JOIN lutteur l1 ON c.id_lutteur1 = l1.id
+        JOIN lutteur l2 ON c.id_lutteur2 = l2.id
+        WHERE c.id='".$params['id']."'
+    ;")->fetchAll(PDO::FETCH_ASSOC);
+    }else{
 
-    $reponse["data"]["combat"] = $taf_config->get_db()->query("SELECT 
-    c.id AS id_combat,
-    c.date_combat AS date_combat,
-    c.titre AS titre,
-    l1.nom AS nom_lutteur1,
-    l1.photo AS photo_lutteur1,
-    l2.nom AS nom_lutteur2,
-    l2.photo AS photo_lutteur2
-    FROM combat c
-    JOIN lutteur l1 ON c.id_lutteur1 = l1.id
-    JOIN lutteur l2 ON c.id_lutteur2 = l2.id;")->fetchAll(PDO::FETCH_ASSOC);
-    // $reponse["data"]["lutteur2"] = $taf_config->get_db()->query("select * from combat CROSS JOIN lutteur where lutteur.id =combat.id_lutteur2 group by combat.id")->fetchAll(PDO::FETCH_ASSOC);
-    // $reponse["data"]["les_lutteurs"] = $taf_config->get_db()->query("select * from combat CROSS JOIN lutteur where lutteur.id=combat.id_lutteur1 or lutteur.id=combat.id_lutteur2 group by combat.id")->fetchAll(PDO::FETCH_ASSOC);
-    $reponse["data"]["les_admins"] = $taf_config->get_db()->query("select * from admin")->fetchAll(PDO::FETCH_ASSOC);
-
-
+        $reponse["data"]["combat"] = $taf_config->get_db()->query("SELECT 
+        c.id AS id_combat,
+        c.date_combat AS date_combat,
+        c.titre AS titre,
+        l1.nom AS nom_lutteur1,
+        l1.photo AS photo_lutteur1,
+        l2.nom AS nom_lutteur2,
+        l2.photo AS photo_lutteur2
+        FROM combat c
+        JOIN lutteur l1 ON c.id_lutteur1 = l1.id
+        JOIN lutteur l2 ON c.id_lutteur2 = l2.id
+        ;")->fetchAll(PDO::FETCH_ASSOC);
+        $reponse["data"]["les_admins"] = $taf_config->get_db()->query("select * from admin")->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
     $reponse["status"] = true;
-
     echo json_encode($reponse);
 } catch (\Throwable $th) {
     $reponse["status"] = false;
