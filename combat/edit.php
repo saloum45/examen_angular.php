@@ -18,24 +18,16 @@ try {
         $params
         contient tous les parametres envoyés par la methode POST
      */
-
-    if(empty($params)){
-        $reponse["status"] = false;
-        $reponse["erreur"] = "Parameters required";
-        echo json_encode($reponse);
-        exit;
-    }
-    // condition sur la modification
-    $condition=$table_query->dynamicCondition(json_decode($params["condition"]),'=');
-    // execution de la requete de modification
-    $query=$table_query->dynamicUpdate(json_decode($params["data"]),$condition);
-    //$reponse["query"]=$query;
-    $resultat=$taf_config->get_db()->exec($query);
-    if ($resultat) {
+    extract($_POST);
+    $query = "UPDATE  `combat` SET  `titre`='$titre',`description_combat`='$description', `date_combat`='$date_combat',`id_lutteur1`='$id_lutteur1',`id_lutteur2`='$id_lutteur2',`resultat`='$resultat' WHERE id='$id'";
+    // $reponse["query"]=$query;
+    if ($taf_config->get_db()->exec($query)) {
         $reponse["status"] = true;
+        $params["id_$table_name"] = $taf_config->get_db()->lastInsertId();
+        $reponse["data"] = $params;
     } else {
         $reponse["status"] = false;
-        $reponse["erreur"] = "Erreur! ou pas de moification";
+        $reponse["erreur"] = "Erreur d'insertion à la base de ";
     }
     echo json_encode($reponse);
 } catch (\Throwable $th) {
