@@ -22,7 +22,7 @@ try {
      */
 
     // preparation de la reqête
-    extract($_POST);
+    extract($params);
     if (isset($file)) {
         # code...
         
