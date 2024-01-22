@@ -22,24 +22,22 @@ try {
      */
 
     // preparation de la reqête
-    extract($params);
-    if (isset($file)) {
-        # code...
-        
+    extract($_POST);
+    if (isset($imageNotUpdated)) {
+        # code...    
+        $query = "UPDATE  `lutteur` SET  `nom`='$nom', `description`='$description',`taille`='$taille', `poids`='$poids',`age`='$age',`id_admin`='$id_admin',`id_ecurie`='$id_ecurie'WHERE id='$id'";
+    }else{        
         $img_nom = $_FILES['file']['name'];
         $tmp_nom = $_FILES['file']['tmp_name'];
         $time = time();
         $nouveau_nom_img = $time . $img_nom;
         $deplacer_image = move_uploaded_file($tmp_nom, "upload/" . $nouveau_nom_img);
-
         $query = "UPDATE  `lutteur` SET  `nom`='$nom',`photo`='$nouveau_nom_img', `description`='$description',`taille`='$taille', `poids`='$poids',`age`='$age',`id_admin`='$id_admin',`id_ecurie`='$id_ecurie'WHERE id='$id'";
-    }else{
 
-        $query = "UPDATE  `lutteur` SET  `nom`='$nom',`photo`='$photo', `description`='$description',`taille`='$taille', `poids`='$poids',`age`='$age',`id_admin`='$id_admin',`id_ecurie`='$id_ecurie'WHERE id='$id'";
     }
     // fin retouche 
 
-    // $reponse["query"]=$query;
+    $reponse["query"]=$query;
     if ($taf_config->get_db()->exec($query)) {
         $reponse["status"] = true;
         $params["id_$table_name"] = $taf_config->get_db()->lastInsertId();
